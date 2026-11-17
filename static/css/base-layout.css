@@ -1,0 +1,30 @@
+.base-layout,
+.base-layout .page-body-wrapper,
+.base-layout .main-panel {
+  background-color: #0f766e;
+}
+
+.base-layout .navbar,
+.base-layout .navbar .navbar-brand-wrapper,
+.base-layout .navbar .navbar-menu-wrapper,
+.base-layout .sidebar,
+.base-layout .footer {
+  background-color: #0f766e;
+}
+
+.base-layout .navbar .navbar-brand-wrapper .navbar-brand,
+.base-layout .navbar .welcome-text,
+.base-layout .navbar .welcome-sub-text,
+.base-layout .navbar .navbar-menu-wrapper,
+.base-layout .navbar .navbar-menu-wrapper .navbar-nav .nav-item .nav-link,
+.base-layout .navbar .navbar-toggler,
+.base-layout .sidebar .nav .nav-item .nav-link,
+.base-layout .sidebar .nav .nav-item .nav-link i.menu-icon,
+.base-layout .footer {
+  color: #fff;
+}
+
+.base-layout .navbar .welcome-text .text-black,
+.base-layout .footer .text-muted {
+  color: #fff !important;
+}
