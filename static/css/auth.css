@@ -4,8 +4,8 @@
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.14), transparent 25rem),
-    #0f766e;
+    radial-gradient(circle at 15% 10%, rgba(86, 118, 230, 0.1), transparent 25rem),
+    #f3f6fc;
   color: #17213b;
   font-family: "Manrope", "Segoe UI", sans-serif;
 }
