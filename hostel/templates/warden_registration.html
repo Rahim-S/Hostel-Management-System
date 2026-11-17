@@ -1,0 +1,127 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+        <h1>Warden Registration</h1>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Add Warden
+                </button>
+            </div>
+        </div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Warden</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{ warden_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+        {% if message %}
+            <div class="alert {% if warden_form.errors or open_edit_warden_id %}alert-danger{% else %}alert-success{% endif %}" role="status">
+                {{ message }}
+            </div>
+        {% endif %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="status">{{ message }}</div>
+        {% endfor %}
+
+        <div class="table-responsive">
+         <table class="table table-striped">
+            <thead>
+                <tr>
+                <th scope="col">Warden ID</th>
+                <th scope="col">Hostel ID</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Contact</th>
+                <th scope="col" aria-label="Warden controls"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for warden, edit_form in warden_rows %}
+                    <tr>
+                        <th scope="row">{{ warden.warden_id }}</th>
+                        <td>{{ warden.hostel_id }}</td>
+                        <td>{{ warden.first_name }}</td>
+                        <td>{{ warden.last_name }}</td>
+                        <td>{{ warden.contact }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editWardenModal{{ warden.pk }}" aria-label="Edit warden {{ warden.first_name }} {{ warden.last_name }}" title="Edit warden">
+                                <i class="mdi mdi-pencil" aria-hidden="true"></i>
+                            </button>
+                            <form method="post" action="{% url 'delete_warden_page' warden.pk %}" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this warden?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger" aria-label="Delete warden {{ warden.first_name }} {{ warden.last_name }}" title="Delete warden">
+                                    <i class="mdi mdi-delete" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">No wardens have been registered yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        {% for warden, edit_form in warden_rows %}
+            <div class="modal fade" id="editWardenModal{{ warden.pk }}" tabindex="-1" aria-labelledby="editWardenModalLabel{{ warden.pk }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="{% url 'edit_warden_page' warden.pk %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h2 class="modal-title fs-5" id="editWardenModalLabel{{ warden.pk }}">Edit Warden</h2>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                {{ edit_form.as_p }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+{% endblock content %}
+
+{% block page_scripts %}
+    {% if open_add_warden_modal %}
+        <script>
+            const addWardenModal = document.getElementById('staticBackdrop');
+            if (addWardenModal) {
+                bootstrap.Modal.getOrCreateInstance(addWardenModal).show();
+            }
+        </script>
+    {% endif %}
+    {% if open_edit_warden_id %}
+        <script>
+            const editWardenModal = document.getElementById('editWardenModal{{ open_edit_warden_id }}');
+            if (editWardenModal) {
+                bootstrap.Modal.getOrCreateInstance(editWardenModal).show();
+            }
+        </script>
+    {% endif %}
+{% endblock page_scripts %}

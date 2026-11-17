@@ -1,0 +1,93 @@
+{%extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+        <h1>Student Registration</h1>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Add Student
+                </button>
+            </div>
+        </div>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">Add Student</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          {{ student_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+        {% if message %}
+    <div class="alert alert-info" role="status">{{ message }}</div>
+{% endif %}
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="status">{{ message }}</div>
+{% endfor %}
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                <th scope="col">Student ID</th>
+                <th scope="col">Room ID</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Birth Date</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Course</th>
+                <th scope="col">Contact</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student, edit_form in student_rows %}
+                    <tr>
+                        <th scope="row">{{ student.student_id }}</th>
+                        <td>{{ student.room_id }}</td>
+                        <td>{{ student.first_name }}</td>
+                        <td>{{ student.last_name }}</td>
+                        <td>{{ student.birth_date }}</td>
+                        <td>{{ student.gender }}</td>
+                        <td>{{ student.course }}</td>
+                        <td>{{ student.contact }}</td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editStudentModal{{ student.pk }}" aria-label="Edit {{ student.first_name }} {{ student.last_name }}" title="Edit student">
+                                <i class="mdi mdi-pencil" aria-hidden="true"></i>
+                            </button>
+                            <a class="btn btn-sm btn-outline-danger" href="{% url 'delete_student_page' student.id %}" aria-label="Delete student" title="Delete student" onclick="return confirm('Are you sure you want to delete this student?')">
+                                <i class="mdi mdi-delete" aria-hidden="true"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% for student, edit_form in student_rows %}
+            {% include 'edit_student.html' with student=student student_form=edit_form %}
+        {% endfor %}
+{% endblock content %}
+
+{% block page_scripts %}
+    {% if open_edit_student_id %}
+        <script>
+            const editStudentModal = document.getElementById('editStudentModal{{ open_edit_student_id }}');
+            if (editStudentModal) {
+                bootstrap.Modal.getOrCreateInstance(editStudentModal).show();
+            }
+        </script>
+    {% endif %}
+{% endblock page_scripts %}

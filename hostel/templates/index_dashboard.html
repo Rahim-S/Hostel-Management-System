@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    {% include 'index.html' %}
+{% endblock content %}
+
+{% block page_scripts %}
+    <script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock page_scripts %}
